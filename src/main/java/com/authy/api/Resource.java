@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.annotation.Nullable;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLHandshakeException;
 
@@ -114,7 +115,8 @@ public class Resource {
         return request("DELETE", path, data, getDefaultOptions());
     }
 
-    public String request(String method, String path, Formattable data, Map<String, String> options) throws AuthyException {
+    @Nullable
+    private String request(String method, String path, Formattable data, Map<String, String> options) throws AuthyException {
         HttpURLConnection connection;
         String answer = null;
 
@@ -131,7 +133,7 @@ public class Resource {
             connection.setRequestProperty("X-Authy-API-Key", apiKey);
 
             // data might be sent as a null value for cases like "DELETE" requests
-            if (data!= null && data.toMap().containsKey("api_key")) {
+            if (data != null && data.toMap().containsKey("api_key")) {
                 LOGGER.log(Level.WARNING, "Found 'api_key' as a parameter, please remove it, Authy-Java already handles the'api_key' for you.");
             }
             if (method.equals(Resource.METHOD_POST) || method.equals(Resource.METHOD_PUT)) {

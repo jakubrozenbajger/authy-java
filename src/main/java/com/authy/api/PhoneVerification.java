@@ -2,11 +2,13 @@ package com.authy.api;
 
 import com.authy.AuthyException;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * @author Authy Inc
  */
 public class PhoneVerification extends Resource {
-    public static final String PHONE_VERIFICATION_API_PATH = "/protected/json/phones/verification/";
+    private static final String PHONE_VERIFICATION_API_PATH = "/protected/json/phones/verification/";
 
     public PhoneVerification(String uri, String key) {
         super(uri, key, Resource.JSON_CONTENT_TYPE);
@@ -22,10 +24,9 @@ public class PhoneVerification extends Resource {
         params.setAttribute("via", via);
 
         Verification verification = new Verification();
-        StringBuilder path = new StringBuilder(PHONE_VERIFICATION_API_PATH);
-        String response;
-        path.append("start");
-        response = this.post(path.toString(), params);
+
+        final String path = PHONE_VERIFICATION_API_PATH + "start";
+        final String response = requireNonNull(post(path, params), "Response is null");
 
         verification.setStatus(this.getStatus());
         verification.setResponse(response);
